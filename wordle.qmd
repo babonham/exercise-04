@@ -6,15 +6,35 @@ editor: visual
 
 ##Exercise 4
 
-Wordle Challenge Loading in my packages and data sets. Viewing them to get an idea of what they look like.
+Wordle Challenge
 
+Loading in my packages and data sets.
+Preliminary
 ```{r}
 library(tidyverse)
 library(ggplot2)
-f<-"https://raw.githubusercontent.com/difiore/ada-datasets/main/collins-scrabble-words-2019.txt" #choose my dataset
+f<-"https://raw.githubusercontent.com/difiore/ada-datasets/main/collins-scrabble-words-2019.txt" #load my dataset
 d<- read_csv(f, col_names = TRUE)
-view(d)
-e<- "https://raw.githubusercontent.com/difiore/ada-datasets/main/google-10000-english-usa-no-swears.txt"
+e<- "https://raw.githubusercontent.com/difiore/ada-datasets/main/google-10000-english-usa-no-swears.txt" #load my second data set
 g<- read_csv(e, col_names = TRUE)
-view(g)
+```
+Starting the code for the Wordle Challenge. Step 1
+```{r}
+# Custom function to load a dictionary file
+load_dictionary <- function(df) {
+  
+  words <- df[[1]]            # extract first column
+  words <- trimws(words)      # remove whitespace
+  words <- words[words != ""] # remove blanks
+  
+  return(words)
+}
+# Creating my two variables
+valid_list <- load_dictionary(d)
+solution_list <- load_dictionary(g)
+
+# Checking structure of my variables
+str(valid_list)
+str(solution_list)
+
 ```

@@ -57,16 +57,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </style>
 
 
-<script src="exercise-04_files/libs/clipboard/clipboard.min.js"></script>
-<script src="exercise-04_files/libs/quarto-html/quarto.js"></script>
-<script src="exercise-04_files/libs/quarto-html/popper.min.js"></script>
-<script src="exercise-04_files/libs/quarto-html/tippy.umd.min.js"></script>
-<script src="exercise-04_files/libs/quarto-html/anchor.min.js"></script>
-<link href="exercise-04_files/libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="exercise-04_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="exercise-04_files/libs/bootstrap/bootstrap.min.js"></script>
-<link href="exercise-04_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="exercise-04_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="wordle_files/libs/clipboard/clipboard.min.js"></script>
+<script src="wordle_files/libs/quarto-html/quarto.js"></script>
+<script src="wordle_files/libs/quarto-html/popper.min.js"></script>
+<script src="wordle_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="wordle_files/libs/quarto-html/anchor.min.js"></script>
+<link href="wordle_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="wordle_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="wordle_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="wordle_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="wordle_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 
 
 </head>
@@ -97,7 +97,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 <p>##Exercise 4</p>
-<p>Wordle Challenge Loading in my packages and data sets. Viewing them to get an idea of what they look like.</p>
+<p>Wordle Challenge</p>
+<p>Loading in my packages and data sets. Preliminary</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
@@ -119,7 +120,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 ℹ Use the conflicted package (&lt;http://conflicted.r-lib.org/&gt;) to force all conflicts to become errors</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>f<span class="ot">&lt;-</span><span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/main/collins-scrabble-words-2019.txt"</span> <span class="co">#choose my dataset</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>f<span class="ot">&lt;-</span><span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/main/collins-scrabble-words-2019.txt"</span> <span class="co">#load my dataset</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>d<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(f, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 279496 Columns: 1
@@ -130,9 +131,8 @@ chr (1): words
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(d)</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>e<span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/main/google-10000-english-usa-no-swears.txt"</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>g<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(e, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>e<span class="ot">&lt;-</span> <span class="st">"https://raw.githubusercontent.com/difiore/ada-datasets/main/google-10000-english-usa-no-swears.txt"</span> <span class="co">#load my second data set</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g<span class="ot">&lt;-</span> <span class="fu">read_csv</span>(e, <span class="at">col_names =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 9884 Columns: 1
 ── Column specification ────────────────────────────────────────────────────────
@@ -142,7 +142,31 @@ chr (1): words
 ℹ Use `spec()` to retrieve the full column specification for this data.
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">view</span>(g)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Starting the code for the Wordle Challenge. Step 1</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom function to load a dictionary file</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>load_dictionary <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> df[[<span class="dv">1</span>]]            <span class="co"># extract first column</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">trimws</span>(words)      <span class="co"># remove whitespace</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> words[words <span class="sc">!=</span> <span class="st">""</span>] <span class="co"># remove blanks</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(words)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating my two variables</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>valid_list <span class="ot">&lt;-</span> <span class="fu">load_dictionary</span>(d)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>solution_list <span class="ot">&lt;-</span> <span class="fu">load_dictionary</span>(g)</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking structure of my variables</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(valid_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:279496] "AA" "AAH" "AAHED" "AAHING" "AAHS" "AAL" "AALII" "AALIIS" ...</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(solution_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code> chr [1:9884] "THE" "OF" "AND" "TO" "A" "IN" "FOR" "IS" "ON" "THAT" "BY" ...</code></pre>
+</div>
 </div>
 
 </main>
