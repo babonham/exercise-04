@@ -8,8 +8,8 @@ editor: visual
 
 Wordle Challenge
 
-Loading in my packages and data sets.
-Preliminary
+Loading in my packages and data sets. Preliminary
+
 ```{r}
 library(tidyverse)
 library(ggplot2)
@@ -18,7 +18,10 @@ d<- read_csv(f, col_names = TRUE)
 e<- "https://raw.githubusercontent.com/difiore/ada-datasets/main/google-10000-english-usa-no-swears.txt" #load my second data set
 g<- read_csv(e, col_names = TRUE)
 ```
-Starting the code for the Wordle Challenge. Step 1
+
+Starting the code for the Wordle Challenge. 
+Step 1: Creating function and variables
+
 ```{r}
 # Custom function to load a dictionary file
 load_dictionary <- function(df) {
@@ -37,4 +40,125 @@ solution_list <- load_dictionary(g)
 str(valid_list)
 str(solution_list)
 
+```
+
+Step 2: Winnowing
+```{r}
+solution_list<- intersect(solution_list, valid_list)
+length(solution_list) #checks how many words are in the vector
+```
+Step 2 Question:
+How many words are in your updated solution_list vector? 8,336 words are in the winnowed solution_list vector.
+
+Step 3:
+```{r}
+pick_solution<- function(solution_list, word_length = 5) {
+  # removes all words from solution_list that are not 5 letters in length
+  filtered_words <- solution_list[nchar(solution_list) == word_length]
+  
+  # [2] randomly chooses a single word from those that remain
+  chosen_word <- sample(filtered_words, size = 1)
+  
+  # [3] splits that word into a vector of single-character elements
+  split_word <- strsplit(chosen_word, "")[[1]]
+  
+  return(split_word)
+}
+
+solution <- pick_solution(solution_list)
+
+```
+Step 4: 
+```{r}
+evaluate_guess <- function(guess, solution) {
+  
+  guess_letters <- strsplit(tolower(guess), "")[[1]]
+  solution_letters <- tolower(solution)
+  
+  feedback <- rep("-", length(solution_letters))
+  
+  # First pass: correct letter & position
+  for (i in seq_along(solution_letters)) {
+    if (guess_letters[i] == solution_letters[i]) {
+      feedback[i] <- "*"
+      solution_letters[i] <- NA   # mark as used
+      guess_letters[i] <- NA
+    }
+  }
+  
+  # Second pass: correct letter wrong position
+  for (i in seq_along(guess_letters)) {
+    if (!is.na(guess_letters[i]) && guess_letters[i] %in% solution_letters) {
+      feedback[i] <- "+"
+      match_index <- match(guess_letters[i], solution_letters)
+      solution_letters[match_index] <- NA  # mark as used
+    }
+  }
+  
+  return(feedback)
+}
+
+play_wordle <- function(solution, valid_list, num_guesses = 6) {
+  
+  word_length <- length(solution)
+  letters_left <- letters
+  guess_history <- c()
+  feedback_history <- c()
+  
+  cat("Welcome to Wordle!\n")
+  cat("You have", num_guesses, 
+      "chances to guess a word of length", word_length, "\n\n")
+  
+  for (guess_num in 1:num_guesses) {
+    
+    cat("Letters left:", paste(toupper(letters_left), collapse = " "), "\n")
+    
+    guess <- tolower(readline(paste0("Enter guess number ", guess_num, ": ")))
+    
+    # Validate guess
+    if (nchar(guess) != word_length) {
+      cat("Invalid guess length. Try again.\n\n")
+      next
+    }
+    
+    if (!(guess %in% valid_list)) {
+      cat("Not a valid word. Try again.\n\n")
+      next
+    }
+    
+    feedback <- evaluate_guess(guess, solution)
+    
+    # Update letters left
+    guessed_letters <- strsplit(guess, "")[[1]]
+    letters_left <- setdiff(letters_left, guessed_letters)
+    
+    # Store history
+    guess_history <- c(guess_history, guess)
+    feedback_history <- c(feedback_history, 
+                          paste(feedback, collapse = ""))
+    
+    cat("Feedback:", paste(feedback, collapse = ""), "\n\n")
+    
+    # Check win
+    if (all(feedback == "*")) {
+      cat("🎉 YOU WON!\n\n")
+      cat("Guess History:\n")
+      for (i in seq_along(guess_history)) {
+        cat(guess_history[i], ":", feedback_history[i], "\n")
+      }
+      return(invisible(NULL))
+    }
+  }
+  
+  # If loop completes → loss
+  cat("😢 YOU LOST!\n")
+  cat("The word was:", paste(solution, collapse = ""), "\n\n")
+  
+  cat("Guess History:\n")
+  for (i in seq_along(guess_history)) {
+    cat(guess_history[i], ":", feedback_history[i], "\n")
+  }
+}
+
+play_wordle(solution, valid_list)
 ```
