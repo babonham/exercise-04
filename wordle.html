@@ -143,23 +143,25 @@ chr (1): words
 ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.</code></pre>
 </div>
 </div>
-<p>Starting the code for the Wordle Challenge. Step 1</p>
+<p>Starting the code for the Wordle Challenge. Step 1: Creating function and variables</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Custom function to load a dictionary file</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>load_dictionary <span class="ot">&lt;-</span> <span class="cf">function</span>(df) {</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>load_dictionary <span class="ot">&lt;-</span> <span class="cf">function</span>(df){</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> df[[<span class="dv">1</span>]]            <span class="co"># extract first column</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">trimws</span>(words)      <span class="co"># remove whitespace</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> words[words <span class="sc">!=</span> <span class="st">""</span>] <span class="co"># remove blanks</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">as.character</span>(df[[<span class="dv">1</span>]])   <span class="co"># FORCE character vector</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">trimws</span>(words)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> words[words <span class="sc">!=</span> <span class="st">""</span>]</span>
 <span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  </span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(words)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating my two variables</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>valid_list <span class="ot">&lt;-</span> <span class="fu">load_dictionary</span>(d)</span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>solution_list <span class="ot">&lt;-</span> <span class="fu">load_dictionary</span>(g)</span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking structure of my variables</span></span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(valid_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  words <span class="ot">&lt;-</span> <span class="fu">toupper</span>(words)          <span class="co"># Normalize case early</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(words)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Creating my two variables</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>valid_list <span class="ot">&lt;-</span> <span class="fu">load_dictionary</span>(d)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>solution_list <span class="ot">&lt;-</span> <span class="fu">load_dictionary</span>(g)</span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="co"># Checking structure of my variables</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(valid_list)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:279496] "AA" "AAH" "AAHED" "AAHING" "AAHS" "AAL" "AALII" "AALIIS" ...</code></pre>
 </div>
@@ -167,6 +169,165 @@ chr (1): words
 <div class="cell-output cell-output-stdout">
 <pre><code> chr [1:9884] "THE" "OF" "AND" "TO" "A" "IN" "FOR" "IS" "ON" "THAT" "BY" ...</code></pre>
 </div>
+</div>
+<p>Step 2: Winnowing</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>solution_list<span class="ot">&lt;-</span> <span class="fu">intersect</span>(solution_list, valid_list)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(solution_list) <span class="co">#checks how many words are in the vector</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 8336</code></pre>
+</div>
+</div>
+<p>Step 2 Question: How many words are in your updated solution_list vector? 8,336 words are in the winnowed solution_list vector.</p>
+<p>Step 3: Custom Function</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>pick_solution <span class="ot">&lt;-</span> <span class="cf">function</span>(solution_list, <span class="at">word_length =</span> <span class="dv">5</span>) {</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># [1] removes all words from solution_list that are not 5 letters in length</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  filtered_words <span class="ot">&lt;-</span> solution_list[<span class="fu">nchar</span>(solution_list) <span class="sc">==</span> word_length]</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># [2] randomly chooses a single word from those that remain</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  chosen_word <span class="ot">&lt;-</span> <span class="fu">sample</span>(filtered_words, <span class="at">size =</span> <span class="dv">1</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># [3] splits that word into a vector of single-character elements</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  split_word <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(chosen_word, <span class="st">""</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(split_word)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a><span class="co">#assign variable</span></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>solution <span class="ot">&lt;-</span> <span class="fu">pick_solution</span>(solution_list) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p>Step 4: Final Functions and Play Game!</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Helper function</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>evaluate_guess <span class="ot">&lt;-</span> <span class="cf">function</span>(guessVec, answerVec){</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  wordLength <span class="ot">&lt;-</span> <span class="fu">length</span>(answerVec)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  resVec <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="st">"-"</span>, wordLength)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  answerCopy <span class="ot">&lt;-</span> answerVec</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  <span class="co"># First pass — exact matches</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>wordLength){</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(guessVec[i] <span class="sc">==</span> answerCopy[i]){</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>      resVec[i] <span class="ot">&lt;-</span> <span class="st">"*"</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>      answerCopy[i] <span class="ot">&lt;-</span> <span class="st">"-"</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Second pass — yellow matches</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>wordLength){</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span>(resVec[i] <span class="sc">!=</span> <span class="st">"*"</span>){</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>      idx <span class="ot">&lt;-</span> <span class="fu">match</span>(guessVec[i], answerCopy)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.na</span>(idx)){</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>        resVec[i] <span class="ot">&lt;-</span> <span class="st">"+"</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        answerCopy[idx] <span class="ot">&lt;-</span> <span class="st">"-"</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">paste</span>(resVec, <span class="at">collapse =</span> <span class="st">""</span>))</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="co">#checking it works</span></span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="fu">evaluate_guess</span>(<span class="fu">strsplit</span>(<span class="st">"early"</span>, <span class="st">""</span>)[[<span class="dv">1</span>]], </span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>              <span class="fu">strsplit</span>(<span class="st">"later"</span>, <span class="st">""</span>)[[<span class="dv">1</span>]])</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a><span class="co"># Main game function</span></span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>play_wordle <span class="ot">&lt;-</span> <span class="cf">function</span>(solution, valid_list, <span class="at">num_guesses =</span> <span class="dv">6</span>, <span class="at">wordLength =</span> <span class="dv">5</span>){</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Ensure solution is a single string, not a vector of letters </span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(solution) <span class="sc">&gt;</span> <span class="dv">1</span>L) solution <span class="ot">&lt;-</span> <span class="fu">paste</span>(solution, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>  solution <span class="ot">&lt;-</span> <span class="fu">toupper</span>(<span class="fu">as.character</span>(solution))</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>  valid_list <span class="ot">&lt;-</span> <span class="fu">toupper</span>(valid_list)</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>  solutionVec <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(solution,<span class="st">""</span>)[[<span class="dv">1</span>]]   <span class="co"># now guaranteed length == wordLength</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Game rules</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"Welcome to Wordle!</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"You have"</span>, num_guesses, <span class="st">"chances to guess a"</span>, wordLength, <span class="st">"letter word.</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Track data</span></span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>  lettersLeft <span class="ot">&lt;-</span> LETTERS</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>  guess_history <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>  feedback_history <span class="ot">&lt;-</span> <span class="fu">c</span>()</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a>  guessCnt <span class="ot">&lt;-</span> <span class="dv">0</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a>  <span class="cf">while</span>(guessCnt <span class="sc">&lt;</span> num_guesses){</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Print letters left </span></span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'[1] "Letters left: '</span>, <span class="fu">paste</span>(lettersLeft, <span class="at">collapse=</span><span class="st">" "</span>), <span class="st">'"</span><span class="sc">\n</span><span class="st">'</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a>    guessCnt <span class="ot">&lt;-</span> guessCnt <span class="sc">+</span> <span class="dv">1</span></span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-60"><a href="#cb16-60" aria-hidden="true" tabindex="-1"></a>    guess <span class="ot">&lt;-</span> <span class="fu">toupper</span>(<span class="fu">readline</span>(</span>
+<span id="cb16-61"><a href="#cb16-61" aria-hidden="true" tabindex="-1"></a>      <span class="fu">paste0</span>(<span class="st">"Enter guess "</span>, guessCnt, <span class="st">": "</span>)</span>
+<span id="cb16-62"><a href="#cb16-62" aria-hidden="true" tabindex="-1"></a>    ))</span>
+<span id="cb16-63"><a href="#cb16-63" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-64"><a href="#cb16-64" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Validate guess</span></span>
+<span id="cb16-65"><a href="#cb16-65" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span>(<span class="cn">TRUE</span>){</span>
+<span id="cb16-66"><a href="#cb16-66" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">nchar</span>(guess) <span class="sc">==</span> wordLength <span class="sc">&amp;&amp;</span> guess <span class="sc">%in%</span> valid_list){</span>
+<span id="cb16-67"><a href="#cb16-67" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb16-68"><a href="#cb16-68" aria-hidden="true" tabindex="-1"></a>      }</span>
+<span id="cb16-69"><a href="#cb16-69" aria-hidden="true" tabindex="-1"></a>      guess <span class="ot">&lt;-</span> <span class="fu">toupper</span>(<span class="fu">readline</span>(</span>
+<span id="cb16-70"><a href="#cb16-70" aria-hidden="true" tabindex="-1"></a>        <span class="fu">paste0</span>(<span class="st">"Invalid. Enter a "</span>, wordLength, <span class="st">" letter valid word: "</span>)</span>
+<span id="cb16-71"><a href="#cb16-71" aria-hidden="true" tabindex="-1"></a>      ))</span>
+<span id="cb16-72"><a href="#cb16-72" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-73"><a href="#cb16-73" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-74"><a href="#cb16-74" aria-hidden="true" tabindex="-1"></a>    guessVec <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(guess,<span class="st">""</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb16-75"><a href="#cb16-75" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-76"><a href="#cb16-76" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Show the guess </span></span>
+<span id="cb16-77"><a href="#cb16-77" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'[1] "'</span>, <span class="fu">paste</span>(guessVec, <span class="at">collapse =</span> <span class="st">" "</span>), <span class="st">'"</span><span class="sc">\n</span><span class="st">'</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb16-78"><a href="#cb16-78" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-79"><a href="#cb16-79" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Evaluate guess </span></span>
+<span id="cb16-80"><a href="#cb16-80" aria-hidden="true" tabindex="-1"></a>    feedback <span class="ot">&lt;-</span> <span class="fu">evaluate_guess</span>(guessVec, solutionVec)</span>
+<span id="cb16-81"><a href="#cb16-81" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-82"><a href="#cb16-82" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Normalize feedback to be a single 5-char string </span></span>
+<span id="cb16-83"><a href="#cb16-83" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(feedback) <span class="sc">&gt;</span> <span class="dv">1</span>L) {</span>
+<span id="cb16-84"><a href="#cb16-84" aria-hidden="true" tabindex="-1"></a>      feedback <span class="ot">&lt;-</span> <span class="fu">paste</span>(feedback, <span class="at">collapse =</span> <span class="st">""</span>)</span>
+<span id="cb16-85"><a href="#cb16-85" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-86"><a href="#cb16-86" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(feedback) <span class="sc">==</span> <span class="dv">1</span>L <span class="sc">&amp;&amp;</span> <span class="fu">nchar</span>(feedback) <span class="sc">==</span> <span class="dv">1</span>L) {</span>
+<span id="cb16-87"><a href="#cb16-87" aria-hidden="true" tabindex="-1"></a>      feedback <span class="ot">&lt;-</span> <span class="fu">strrep</span>(feedback, wordLength)   <span class="co"># "-" -&gt; "-----"</span></span>
+<span id="cb16-88"><a href="#cb16-88" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-89"><a href="#cb16-89" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-90"><a href="#cb16-90" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Store history </span></span>
+<span id="cb16-91"><a href="#cb16-91" aria-hidden="true" tabindex="-1"></a>    guess_history <span class="ot">&lt;-</span> <span class="fu">c</span>(guess_history, guess)</span>
+<span id="cb16-92"><a href="#cb16-92" aria-hidden="true" tabindex="-1"></a>    feedback_history <span class="ot">&lt;-</span> <span class="fu">c</span>(feedback_history, feedback)</span>
+<span id="cb16-93"><a href="#cb16-93" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-94"><a href="#cb16-94" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Display feedback spaced with icons</span></span>
+<span id="cb16-95"><a href="#cb16-95" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">'[1] "'</span>, <span class="fu">paste</span>(<span class="fu">strsplit</span>(feedback, <span class="st">""</span>)[[<span class="dv">1</span>]], <span class="at">collapse =</span> <span class="st">" "</span>), <span class="st">'"</span><span class="sc">\n</span><span class="st">'</span>, <span class="at">sep =</span> <span class="st">""</span>)</span>
+<span id="cb16-96"><a href="#cb16-96" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-97"><a href="#cb16-97" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update lettersLeft: remove only gray letters (not present in solution) </span></span>
+<span id="cb16-98"><a href="#cb16-98" aria-hidden="true" tabindex="-1"></a>    fb_chars <span class="ot">&lt;-</span> <span class="fu">strsplit</span>(feedback, <span class="st">""</span>)[[<span class="dv">1</span>]]</span>
+<span id="cb16-99"><a href="#cb16-99" aria-hidden="true" tabindex="-1"></a>    gray_mask <span class="ot">&lt;-</span> fb_chars <span class="sc">==</span> <span class="st">"-"</span></span>
+<span id="cb16-100"><a href="#cb16-100" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">any</span>(gray_mask)) {</span>
+<span id="cb16-101"><a href="#cb16-101" aria-hidden="true" tabindex="-1"></a>      letters_to_remove <span class="ot">&lt;-</span> <span class="fu">unique</span>(guessVec[gray_mask])</span>
+<span id="cb16-102"><a href="#cb16-102" aria-hidden="true" tabindex="-1"></a>      lettersLeft <span class="ot">&lt;-</span> <span class="fu">setdiff</span>(lettersLeft, letters_to_remove)</span>
+<span id="cb16-103"><a href="#cb16-103" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-104"><a href="#cb16-104" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb16-105"><a href="#cb16-105" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Win condition</span></span>
+<span id="cb16-106"><a href="#cb16-106" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (feedback <span class="sc">==</span> <span class="fu">strrep</span>(<span class="st">"*"</span>, wordLength)){</span>
+<span id="cb16-107"><a href="#cb16-107" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"You won!</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb16-108"><a href="#cb16-108" aria-hidden="true" tabindex="-1"></a>      <span class="co">#returns count, guesses, and feedback</span></span>
+<span id="cb16-109"><a href="#cb16-109" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb16-110"><a href="#cb16-110" aria-hidden="true" tabindex="-1"></a>  <span class="at">Guess_Count =</span> guessCnt,</span>
+<span id="cb16-111"><a href="#cb16-111" aria-hidden="true" tabindex="-1"></a>  <span class="at">Guess_History =</span> guess_history,</span>
+<span id="cb16-112"><a href="#cb16-112" aria-hidden="true" tabindex="-1"></a>  <span class="at">Feedback_History =</span> feedback_history</span>
+<span id="cb16-113"><a href="#cb16-113" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb16-114"><a href="#cb16-114" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-115"><a href="#cb16-115" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb16-116"><a href="#cb16-116" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb16-117"><a href="#cb16-117" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Loss condition</span></span>
+<span id="cb16-118"><a href="#cb16-118" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">You lose!. The word was:"</span>, solution, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb16-119"><a href="#cb16-119" aria-hidden="true" tabindex="-1"></a>      <span class="co">#returns count, guesses, and feedback</span></span>
+<span id="cb16-120"><a href="#cb16-120" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">list</span>(</span>
+<span id="cb16-121"><a href="#cb16-121" aria-hidden="true" tabindex="-1"></a>  <span class="at">Guess_Count =</span> guessCnt,</span>
+<span id="cb16-122"><a href="#cb16-122" aria-hidden="true" tabindex="-1"></a>  <span class="at">Guess_History =</span> guess_history,</span>
+<span id="cb16-123"><a href="#cb16-123" aria-hidden="true" tabindex="-1"></a>  <span class="at">Feedback_History =</span> feedback_history</span>
+<span id="cb16-124"><a href="#cb16-124" aria-hidden="true" tabindex="-1"></a>))</span>
+<span id="cb16-125"><a href="#cb16-125" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-126"><a href="#cb16-126" aria-hidden="true" tabindex="-1"></a><span class="co">#play the game!!!</span></span>
+<span id="cb16-127"><a href="#cb16-127" aria-hidden="true" tabindex="-1"></a>solution <span class="ot">&lt;-</span> <span class="fu">pick_solution</span>(solution_list) <span class="co">#generates solution</span></span>
+<span id="cb16-128"><a href="#cb16-128" aria-hidden="true" tabindex="-1"></a><span class="fu">play_wordle</span>(solution, valid_list) <span class="co">#starts game</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 
 </main>

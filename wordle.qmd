@@ -19,16 +19,17 @@ e<- "https://raw.githubusercontent.com/difiore/ada-datasets/main/google-10000-en
 g<- read_csv(e, col_names = TRUE)
 ```
 
-Starting the code for the Wordle Challenge. 
-Step 1: Creating function and variables
+Starting the code for the Wordle Challenge. Step 1: Creating function and variables
 
 ```{r}
 # Custom function to load a dictionary file
-load_dictionary <- function(df) {
+load_dictionary <- function(df){
   
-  words <- df[[1]]            # extract first column
-  words <- trimws(words)      # remove whitespace
-  words <- words[words != ""] # remove blanks
+  words <- as.character(df[[1]])   # FORCE character vector
+  words <- trimws(words)
+  words <- words[words != ""]
+  
+  words <- toupper(words)          # Normalize case early
   
   return(words)
 }
@@ -43,17 +44,20 @@ str(solution_list)
 ```
 
 Step 2: Winnowing
+
 ```{r}
 solution_list<- intersect(solution_list, valid_list)
 length(solution_list) #checks how many words are in the vector
 ```
-Step 2 Question:
-How many words are in your updated solution_list vector? 8,336 words are in the winnowed solution_list vector.
 
-Step 3:
+Step 2 Question: How many words are in your updated solution_list vector? 8,336 words are in the winnowed solution_list vector.
+
+Step 3: Custom Function
+
 ```{r}
-pick_solution<- function(solution_list, word_length = 5) {
-  # removes all words from solution_list that are not 5 letters in length
+pick_solution <- function(solution_list, word_length = 5) {
+  
+  # [1] removes all words from solution_list that are not 5 letters in length
   filtered_words <- solution_list[nchar(solution_list) == word_length]
   
   # [2] randomly chooses a single word from those that remain
@@ -65,100 +69,140 @@ pick_solution<- function(solution_list, word_length = 5) {
   return(split_word)
 }
 
-solution <- pick_solution(solution_list)
-
+#assign variable
+solution <- pick_solution(solution_list) 
 ```
-Step 4: 
-```{r}
-evaluate_guess <- function(guess, solution) {
-  
-  guess_letters <- strsplit(tolower(guess), "")[[1]]
-  solution_letters <- tolower(solution)
-  
-  feedback <- rep("-", length(solution_letters))
-  
-  # First pass: correct letter & position
-  for (i in seq_along(solution_letters)) {
-    if (guess_letters[i] == solution_letters[i]) {
-      feedback[i] <- "*"
-      solution_letters[i] <- NA   # mark as used
-      guess_letters[i] <- NA
-    }
-  }
-  
-  # Second pass: correct letter wrong position
-  for (i in seq_along(guess_letters)) {
-    if (!is.na(guess_letters[i]) && guess_letters[i] %in% solution_letters) {
-      feedback[i] <- "+"
-      match_index <- match(guess_letters[i], solution_letters)
-      solution_letters[match_index] <- NA  # mark as used
-    }
-  }
-  
-  return(feedback)
-}
 
-play_wordle <- function(solution, valid_list, num_guesses = 6) {
+Step 4: Final Functions and Play Game!
+
+```{r}
+#| eval: false
+# Helper function
+evaluate_guess <- function(guessVec, answerVec){
   
-  word_length <- length(solution)
-  letters_left <- letters
+  wordLength <- length(answerVec)
+  resVec <- rep("-", wordLength)
+  
+  answerCopy <- answerVec
+  
+  # First pass — exact matches
+  for(i in 1:wordLength){
+    if(guessVec[i] == answerCopy[i]){
+      resVec[i] <- "*"
+      answerCopy[i] <- "-"
+    }
+  }
+  
+  # Second pass — yellow matches
+  for(i in 1:wordLength){
+    if(resVec[i] != "*"){
+      idx <- match(guessVec[i], answerCopy)
+      if(!is.na(idx)){
+        resVec[i] <- "+"
+        answerCopy[idx] <- "-"
+      }
+    }
+  }
+  
+  return(paste(resVec, collapse = ""))
+}
+#checking it works
+evaluate_guess(strsplit("early", "")[[1]], 
+              strsplit("later", "")[[1]])
+# Main game function
+play_wordle <- function(solution, valid_list, num_guesses = 6, wordLength = 5){
+  
+  # Ensure solution is a single string, not a vector of letters 
+  if (length(solution) > 1L) solution <- paste(solution, collapse = "")
+  solution <- toupper(as.character(solution))
+  valid_list <- toupper(valid_list)
+  solutionVec <- strsplit(solution,"")[[1]]   # now guaranteed length == wordLength
+  
+  # Game rules
+  cat("Welcome to Wordle!\n")
+  cat("You have", num_guesses, "chances to guess a", wordLength, "letter word.\n\n")
+  
+  # Track data
+  lettersLeft <- LETTERS
   guess_history <- c()
   feedback_history <- c()
   
-  cat("Welcome to Wordle!\n")
-  cat("You have", num_guesses, 
-      "chances to guess a word of length", word_length, "\n\n")
+  guessCnt <- 0
   
-  for (guess_num in 1:num_guesses) {
+  while(guessCnt < num_guesses){
     
-    cat("Letters left:", paste(toupper(letters_left), collapse = " "), "\n")
+    # Print letters left 
+    cat('[1] "Letters left: ', paste(lettersLeft, collapse=" "), '"\n', sep = "")
     
-    guess <- tolower(readline(paste0("Enter guess number ", guess_num, ": ")))
+    guessCnt <- guessCnt + 1
+    
+    guess <- toupper(readline(
+      paste0("Enter guess ", guessCnt, ": ")
+    ))
     
     # Validate guess
-    if (nchar(guess) != word_length) {
-      cat("Invalid guess length. Try again.\n\n")
-      next
-    }
-    
-    if (!(guess %in% valid_list)) {
-      cat("Not a valid word. Try again.\n\n")
-      next
-    }
-    
-    feedback <- evaluate_guess(guess, solution)
-    
-    # Update letters left
-    guessed_letters <- strsplit(guess, "")[[1]]
-    letters_left <- setdiff(letters_left, guessed_letters)
-    
-    # Store history
-    guess_history <- c(guess_history, guess)
-    feedback_history <- c(feedback_history, 
-                          paste(feedback, collapse = ""))
-    
-    cat("Feedback:", paste(feedback, collapse = ""), "\n\n")
-    
-    # Check win
-    if (all(feedback == "*")) {
-      cat("🎉 YOU WON!\n\n")
-      cat("Guess History:\n")
-      for (i in seq_along(guess_history)) {
-        cat(guess_history[i], ":", feedback_history[i], "\n")
+    while(TRUE){
+      if(nchar(guess) == wordLength && guess %in% valid_list){
+        break
       }
-      return(invisible(NULL))
+      guess <- toupper(readline(
+        paste0("Invalid. Enter a ", wordLength, " letter valid word: ")
+      ))
+    }
+    
+    guessVec <- strsplit(guess,"")[[1]]
+    
+    # Show the guess 
+    cat('[1] "', paste(guessVec, collapse = " "), '"\n', sep = "")
+    
+    # Evaluate guess 
+    feedback <- evaluate_guess(guessVec, solutionVec)
+    
+    # Normalize feedback to be a single 5-char string 
+    if (length(feedback) > 1L) {
+      feedback <- paste(feedback, collapse = "")
+    }
+    if (length(feedback) == 1L && nchar(feedback) == 1L) {
+      feedback <- strrep(feedback, wordLength)   # "-" -> "-----"
+    }
+    
+    # Store history 
+    guess_history <- c(guess_history, guess)
+    feedback_history <- c(feedback_history, feedback)
+    
+    # Display feedback spaced with icons
+    cat('[1] "', paste(strsplit(feedback, "")[[1]], collapse = " "), '"\n', sep = "")
+    
+    # Update lettersLeft: remove only gray letters (not present in solution) 
+    fb_chars <- strsplit(feedback, "")[[1]]
+    gray_mask <- fb_chars == "-"
+    if (any(gray_mask)) {
+      letters_to_remove <- unique(guessVec[gray_mask])
+      lettersLeft <- setdiff(lettersLeft, letters_to_remove)
+    }
+    
+    # Win condition
+    if (feedback == strrep("*", wordLength)){
+      cat("You won!\n")
+      #returns count, guesses, and feedback
+      return(list(
+  Guess_Count = guessCnt,
+  Guess_History = guess_history,
+  Feedback_History = feedback_history
+))
     }
   }
   
-  # If loop completes → loss
-  cat("😢 YOU LOST!\n")
-  cat("The word was:", paste(solution, collapse = ""), "\n\n")
-  
-  cat("Guess History:\n")
-  for (i in seq_along(guess_history)) {
-    cat(guess_history[i], ":", feedback_history[i], "\n")
-  }
+  # Loss condition
+  cat("\nYou lose!. The word was:", solution, "\n")
+      #returns count, guesses, and feedback
+  return(list(
+  Guess_Count = guessCnt,
+  Guess_History = guess_history,
+  Feedback_History = feedback_history
+))
 }
-
-play_wordle(solution, valid_list)
+#play the game!!!
+solution <- pick_solution(solution_list) #generates solution
+play_wordle(solution, valid_list) #starts game
 ```
